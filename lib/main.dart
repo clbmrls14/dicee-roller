@@ -27,9 +27,19 @@ class DicePage extends StatefulWidget {
 class _DicePageState extends State<DicePage> {
   int leftDieValue = Random().nextInt(6) + 1;
   int rightDieValue = Random().nextInt(6) + 1;
+  int modifiedTotal = 0;
+
+  TextEditingController modifierController = TextEditingController();
 
   rollDie() {
     return Random().nextInt(6) + 1;
+  }
+
+  getModifiedTotal() {
+    if (!modifierController.text.contains(new RegExp(r'[0-9]'))) {
+      modifierController.text = '0';
+    }
+      return leftDieValue + rightDieValue + int.parse(modifierController.text);
   }
 
   @override
@@ -38,6 +48,45 @@ class _DicePageState extends State<DicePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Modifier: ',
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                width: 50,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  maxLength: 1,
+                  controller: modifierController,
+                  cursorColor: Colors.red.shade900,
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.red.shade900,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 3, color: Colors.white),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 3, color: Colors.white),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -66,7 +115,7 @@ class _DicePageState extends State<DicePage> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
-              'Total Value: ${ leftDieValue + rightDieValue}',
+              'Total Value: ${getModifiedTotal()}',
               style: TextStyle(
                 fontSize: 28,
                 color: Colors.white,
